@@ -1,18 +1,7 @@
-<html>
-	<head>
-		<link rel="stylesheet" href="../reveal.js/css/reveal.css">
-                <link rel="stylesheet" href="../reveal.js/css/theme/sky.css">
-	</head>
-	<body>
-		<div class="reveal">
-			<div class="slides">
-        <section data-markdown>
-          <textarea data-template>
 # DLL Hell in Go
-          </textarea>
-        </section>
-        <section data-markdown>
-          <textarea data-template>
+
+---
+
 ## Example
 
 odb -> bosh-utils -> socks5-proxy
@@ -20,10 +9,9 @@ odb -> bosh-utils -> socks5-proxy
 \\-> credhub-cli -> socks5-proxy
 
 At least two CF tools use a shared library. Cool?
-          </textarea>
-        </section>
-        <section data-markdown>
-          <textarea data-template>
+
+---
+
 ## An innocuous PR
 https://github.com/cloudfoundry/socks5-proxy/commit/add0b5c1f03d03067bfac649f70fafb7c008e794
 
@@ -33,10 +21,9 @@ https://github.com/cloudfoundry/socks5-proxy/commit/add0b5c1f03d03067bfac649f70f
     * BOSH-Utils did not
 
 * ODB is now broken
-          </textarea>
-        </section>
-        <section data-markdown>
-          <textarea data-template>
+
+---
+
 ## Why?
 
 _dep_ package manager
@@ -47,11 +34,9 @@ _dep_ package manager
 * stores in lock file
 * vendors appropriate versions to a single vendor dir
 * socks5-proxy does not have versions
-          </textarea>
-        </section>
 
-        <section data-markdown>
-          <textarea data-template>
+---
+
 ## Semantic versions
 
 vN.M.P[-pre-release][+build-id]
@@ -59,11 +44,9 @@ vN.M.P[-pre-release][+build-id]
 * A fix which doesn't add or change functionality => P++
 * A new feature which preserves existing API and functionality => M++
 * A change to existing API or funcionality => N++
-          </textarea>
-        </section>
 
-        <section data-markdown>
-          <textarea data-template>
+---
+
 ## SemVer'ed socks5-proxy
 
 socks5-proxy is an young project, so could use v0.M.P numbering
@@ -77,11 +60,9 @@ socks5-proxy is an young project, so could use v0.M.P numbering
 And...
 
 dep would flag there is a version inconsistency :(
-          </textarea>
-        </section>
 
-        <section data-markdown>
-          <textarea data-template>
+---
+
 ## How it used to be: _godep_ 
 
 * Direct dependencies are vendored locally
@@ -94,11 +75,9 @@ But...
 
 _godep_ is deprecated in favour of _dep_,
 and Pivotal has generally moved to _dep_.
-          </textarea>
-        </section>
 
-        <section data-markdown>
-          <textarea data-template>
+---
+
 ## gopkg.in
 
 * http://gopkg.in/yaml.v2
@@ -109,11 +88,9 @@ Features
 * Code imports URL as above
 * Version omitted when used in code.
 * Actually points to your code on github
-          </textarea>
-        </section>
 
-        <section data-markdown>
-          <textarea data-template>
+---
+
 ## socks5-proxy and gopkg.in?
 
 * Could have bumped major version when making API change
@@ -121,11 +98,9 @@ Features
 * credhub-cli would import http://gopkg.in/cloudfoundry/socks5-proxy.v1
 
 _dep_ would vendor each separately
-          </textarea>
-        </section>
 
-        <section data-markdown>
-          <textarea data-template>
+---
+
 ## The future
 
 _dep_ is going to be replaced by _vgo_
@@ -133,11 +108,9 @@ _dep_ is going to be replaced by _vgo_
 * A bit like _dep_ (dependency tree stored locally)
 * A bit like _gopkg.in_ (major version are distinct code bases)
 * New stuff (package declares lowest acceptable version)
-          </textarea>
-        </section>
 
-        <section data-markdown>
-          <textarea data-template>
+---
+
 ## Recommendations
 
 As a library author
@@ -145,28 +118,12 @@ As a library author
 * If you change any exported surface, bump the major number
 * Use gopkg.in to separate versions of your dependencies
 * Document gopkg.in as your import URL
-          </textarea>
-        </section>
 
-        <section data-markdown>
-          <textarea data-template>
+---
+
 ## Recommendations
 
 As a library user
 * Use a package manager (dep is current stable recommendation)
 * Shout if libraries break versioning for you
 * Experiment with _vgo_
-          </textarea>
-        </section>
-
-			</div>
-		</div>
-		<script src="../reveal.js/js/reveal.js"></script>
-    <script src="../reveal.js/plugin/markdown/marked.js"></script>
-    <script src="../reveal.js/plugin/markdown/markdown.js"></script>
-		<script>
-			Reveal.initialize();
-		</script>
-	</body>
-</html>
-
