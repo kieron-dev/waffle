@@ -1,3 +1,10 @@
+---
+title: Defence Against the Dark Arts
+theme: solarized
+revealOptions:
+    transition: 'fade'
+---
+
 # Defence Against the Dark Arts
 
 > London, Winter 2020

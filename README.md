@@ -5,5 +5,5 @@ $ npm install -g reveal-md
 
 Run with:
 ```
-$ reveal-md ./markdown/dada-01.md -w -theme solarized
+$ reveal-md ./markdown/dada-01.md -w 
 ```
