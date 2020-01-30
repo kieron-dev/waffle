@@ -28,7 +28,13 @@ A series of sessions focusing on aspects of security:
  * PAS???
  * ...
 
-If you have something interesting to share let us know!
+---
+
+## Session rules
+
+ * There are no stupid questions!
+ * If you'd like to share (or learn) more about a topic by leading a session, let us know!
+ * Participate as you would in a pairing session
 
 ---
 
