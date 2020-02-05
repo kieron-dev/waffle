@@ -34,7 +34,7 @@ Or, attack your own.
 
 ---
 
-# Injection
+## Injection
 
 ---
 
@@ -54,9 +54,9 @@ Or, attack your own.
 
 ---
 
-### SQL Injection
+## SQL Injection
 
-OWASP #1 Vulnerability
+### OWASP #1 Vulnerability
 
 * Easy to exploit
 * Common vulnerability
@@ -75,7 +75,7 @@ OWASP #1 Vulnerability
 
 ---
 
-### Vulnerable code example
+## Vulnerable code example
 
 ```java
 String query = "SELECT id FROM users " +
@@ -83,9 +83,9 @@ String query = "SELECT id FROM users " +
    "AND password = '" + req.getParameter("password") + "'";
 ```
 
-#### Benign usage
+### Benign usage
 
-With `username=alice` and `password=supersecret`, this query would be created:
+Let `username=alice` and `password=supersecret`, then query would be:
 
 ```sql
 SELECT id from users WHERE name = 'alice' AND password = 'supersecret';
@@ -93,7 +93,9 @@ SELECT id from users WHERE name = 'alice' AND password = 'supersecret';
 
 ---
 
-### What results from the following input data sets?
+## Question
+
+### What results from the following input data pairs?
 
 ```java
 String query = "SELECT id FROM users " +
@@ -111,12 +113,15 @@ String query = "SELECT id FROM users " +
 
 ## Challenge
 
-* Login to the Juice Shop as the first valid user (admin)
+### Using SQL Injection:
+* Login to the Juice Shop without knowing a user email or password
 * Login as `support@juice-sh.op`
 * Login as an existing user beginning with `J1`
 * Login as user with id = `8`
 
 ---
+
+## Question
 
 ### How can you force the following queries (or equivalent)?
 
@@ -133,6 +138,8 @@ String query = "SELECT id FROM users " +
 
 ---
 
+## Question
+
 ### How can you get round this (complication)?
 
 ```java
@@ -143,7 +150,9 @@ String query = "SELECT id FROM users " +
 
 ---
 
-### Bypassing Authentication
+## Bypassing Authentication
+
+### Patterns:
 
 * `admin'--`
 * `admin'/*`
@@ -154,57 +163,60 @@ String query = "SELECT id FROM users " +
 
 ---
 
-### Error visibility
+## Error visibility
 
-* Sometimes full SQL error output in response - amazing!
-* Sometimes we just see an error
+* Sometimes full SQL error output in response - nice!
+* Sometimes we just see an error with no detail
 * Sometimes we see nothing
 
-* Techniques
-
+* Methods:
    * Trial and error
    * Side channels (e.g. timing)
 
 ---
 
-### Union selects
+## Union selects
 
-* SQL allows concatenation of queries with the UNION keyword
+* SQL allows concatenation of queries with the `UNION` keyword
 
 ```
-SELECT name FROM Person WHERE name like 'foo%'
-UNION SELECT name FROM Company where name like 'foo%'
+SELECT name FROM Person WHERE name like 'foo%' UNION
+   SELECT name FROM Company where name like 'foo%'
 ```
 
 * Column count must match
-* Depending on the database, positional data types must match
+* Positional data types must match (for some databases)
 * Data can be extracted from different tables
-* How could we use this??
+* How can we exploit this??
 
 ---
 
-### Challenge
+## Challenge
 
 Find another exploitable SQL injection attack in the Juice Bar app
 
 ---
 
-### Challenge - Hint
+## Challenge
+
+(Hint)
 
 * Look at network traffic
 * What looks like a database call?
-* How can you inject your payload?
-* What might be causing errors?
+* How might you inject your payload?
+* What could be causing errors?
 
 ---
 
-### Challenge
+## Challenge
 
 Extract the table definitions
 
 ---
 
-### Challenge - Hint
+## Challenge
+
+(Hint)
 
 * What database are we hitting?
 * What does the manual say about listing tables / schema?
@@ -212,7 +224,7 @@ Extract the table definitions
 
 ---
 
-### Challenge - Solution
+## Challenge - Solution
 
 [List tables](https://juice-shop-kfb.herokuapp.com/rest/products/search?q=asdf%27\)\)%20UNION%20select%201,%202,%203,%204,%205,%206,%207,%208,%20tbl_name%20from%20sqlite_master%20--)
 
@@ -220,10 +232,12 @@ Extract the table definitions
 
 ---
 
-### Challenge:  Extraction of sensitive data
+## Challenge
 
-* Grab the all the encrypted passwords
-* Decrypt admin's password (easily)
+### Extraction of sensitive data
+
+* Grab the all the emails and encrypted passwords
+* Decipher admin's password (easily)
 * Dump the credit card data
 
 ---
@@ -231,9 +245,9 @@ Extract the table definitions
 ## How to defend against these attacks
 
 * Never insert user input directly into queries
-* Use prepared statements
-* Stored procedures?
-* White-list input (inflexible)
-* Black-list input (breakable)
-* Don't use a database
-* Have no users
+* Ideally, use database or library functions:
+   * Prepared statements
+   * Stored procedures?
+* If you must:
+   * White-list input (inflexible)
+   * Black-list input (breakable)
