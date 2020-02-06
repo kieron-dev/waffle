@@ -5,9 +5,9 @@ revealOptions:
     transition: 'fade'
 ---
 
-# Defence Against the Dark Arts
+# Defence Against the Dark Arts - 2
 
-> London, Winter 2020
+> London, 6th February, 2020
 
 ---
 
