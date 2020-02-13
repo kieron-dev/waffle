@@ -320,3 +320,9 @@ Search results for <b><%=HtmlUtils.htmlEscape(searchCriteria)%></b>:
 * Can be quite effortsome to define for a whole application
 
 **= Positive Security Rule**
+
+---
+
+### What you need to protect against
+
+[Filter evasion cheat sheet](https://owasp.org/www-community/xss-filter-evasion-cheatsheet)
