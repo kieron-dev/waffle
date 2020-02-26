@@ -5,9 +5,9 @@ revealOptions:
     transition: 'fade'
 ---
 
-# Defence Against the Dark Arts - 2
+# Defence Against the Dark Arts
 
-> London, 6th February, 2020
+> #2: London, 6th February, 2020
 
 ---
 
@@ -121,7 +121,7 @@ String query = "SELECT id FROM users " +
 
 ---
 
-## Question
+## Challenge recap
 
 ### How can you force the following queries (or equivalent)?
 
