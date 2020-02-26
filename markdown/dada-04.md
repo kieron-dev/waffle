@@ -38,20 +38,30 @@ Or, attack your own.
 
 ---
 
-## What is it
+## Practical requirements
 
-* Attacker uses program input with unchecked length to corrupt memory
-* At best, can crash a thread or process
-* At worst, can lead to a privileged shell on the host machine
+* Linux VM
+ - https://github.com/gcapizzi/linux-training-playground might be useful!
+* gcc
+* gdb
+* 32-bit libraries
+  - `apt install gcc-multilib`
+
+## What are buffer overflow attacks?
+
+* Attacker uses program input with unchecked bounds to corrupt memory
+* Can cause programs to crash
+* Can allow arbitrary code execution with program's privileges
 
 ---
 
 ## What is vulnerable
 
-* Programming languages with low-level memory management, e.g.
+* Programs written in languages with low-level memory management, e.g.
   - C
   - C++
   - Assembly
+  - e.g. Operating Systems ;)
 * Functions without bounds checking, e.g.
   - `gets`, `strcpy`, `scanf`, `sprintf`, `getenv`, ...
 
@@ -292,6 +302,21 @@ How stack looks at start of `func` execution
 
 ---
 
+## OS Mitigations
+
+### Address Space Randomisation
+
+* Location of code is randomised on each call
+* Impossible for attacker to precisely target code locations
+* Workarounds exist
+
+To turn off:
+```bash
+# echo 0 > /proc/sys/kernel/randomize_va_space
+```
+
+---
+
 ## Exercise - modify %eip
 
 <small>`typing.c` on github</small>
@@ -342,6 +367,10 @@ $ python -c 'print "A"*32 + "\xd6\x91\x04\x08"' | ./typing
 ---
 
 ## Demo - shell execution
+
+<small>
+Turn off non-executable stacks with `-z execstack` in `gcc`
+</small>
 
 ```c
 vuln() {
