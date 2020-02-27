@@ -47,6 +47,8 @@ Or, attack your own.
 * 32-bit libraries
   - `apt install gcc-multilib`
 
+---
+
 ## What are buffer overflow attacks?
 
 * Attacker uses program input with unchecked bounds to corrupt memory
