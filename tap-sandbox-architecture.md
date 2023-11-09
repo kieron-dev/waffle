@@ -24,8 +24,8 @@ flowchart LR
 
     subgraph cloud[Cloud]
         subgraph Academies
-            tanzuAcademy[Tanzu Academy]-->basicGuide(Basic Guide)
-            tanzuAcademy-->vipGuide(VIP Guide)
+            tanzuAcademy[Tanzu Academy]-->basicGuide(Developer Sandbox Guide)
+            tanzuAcademy-->vipGuide(Developer Sandbox VIP Guide)
         end
 
         subgraph Educates
@@ -54,6 +54,7 @@ flowchart LR
     tanzuAcademy -.-> |registers| trainingPortal
 
     basicGuide-.->basicWorkshop
+    basicWorkshop -.-> |references| pool
     vipGuide-.->vipWorkshop
 
     classDef net fill:#eee
